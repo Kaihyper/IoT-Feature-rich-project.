@@ -1,5 +1,12 @@
 # IoT TinyML Safety Monitor
 
+![Platform](https://img.shields.io/badge/platform-ESP32%20%7C%20ESP32--S3-blue)
+![Framework](https://img.shields.io/badge/framework-Arduino%20%2F%20PlatformIO-orange)
+![RTOS](https://img.shields.io/badge/FreeRTOS-enabled-brightgreen)
+![TinyML](https://img.shields.io/badge/TinyML-TensorFlow%20Lite%20Micro-ff6f00)
+![Connectivity](https://img.shields.io/badge/connectivity-ESP--NOW%20%2B%20Blynk-9cf)
+![License](https://img.shields.io/badge/license-MIT-lightgrey)
+
 A two-node home environmental safety and monitoring system combining deterministic safety logic with an on-device TinyML anomaly layer.
 
 ## What it does
@@ -40,6 +47,26 @@ The two boards talk directly to each other over **ESP-NOW** (no router or intern
 - **Two-tier safety design** — a deterministic rule-based check handles anything truly time-critical; ML is deliberately kept out of that fast path and used only as a secondary safeguard.
 - **Real power-awareness** — interrupt-driven digital inputs instead of polling, WiFi modem sleep, and full deep-sleep dual-wake (timer + button) on the satellite node.
 - **Local resilience** — the ESP-NOW link and buzzer/alarm logic keep working even if the internet or Blynk connection drops, which matters specifically because this is a safety device.
+
+## Demo
+
+Live Blynk dashboard showing the secondary node's temperature, humidity, and chart widgets updating from real sensor data:
+
+![Blynk dashboard demo](docs/images/blynk_dashboard_demo.png)
+
+## Roadmap
+
+- [x] Secondary node: DHT22/DHT11 + light sensor + deep sleep (timer + button wake)
+- [x] ESP-NOW link between primary and secondary nodes
+- [x] Primary node: hard-limit safety check (flame/gas) with buzzer alarm
+- [x] FreeRTOS task split on the primary node (safety / ML+display / networking)
+- [x] Blynk dashboard integration on both nodes
+- [ ] Calibrate `GAS_HARD_LIMIT_RAW` against real MQ-2 burn-in data
+- [ ] Train and integrate the real Edge Impulse anomaly-detection model (replacing the placeholder heuristic)
+- [ ] Add battery + charging circuit (18650 + TP4056) to the secondary node
+- [ ] Add a battery voltage monitor with low-battery Blynk alert
+- [ ] Enclosure / case design for both nodes
+- [ ] Write unit tests for the sensor-reading and hard-limit logic where feasible on-device
 
 ## Repository structure
 
